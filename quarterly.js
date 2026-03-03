@@ -1380,4 +1380,4 @@ function flipFilterTabs() {
   updateFilters();
 }
 
-flipFilterTabs();
+// flipFilterTabs();
