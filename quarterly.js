@@ -1172,212 +1172,212 @@ function maskScroll() {
 
 maskScroll();
 
-// function flipFilterTabs() {
-//   if (typeof gsap === "undefined" || typeof Flip === "undefined") return;
+function flipFilterTabs() {
+  if (typeof gsap === "undefined" || typeof Flip === "undefined") return;
 
-//   gsap.registerPlugin(Flip);
+  gsap.registerPlugin(Flip);
 
-//   const filterLabels = gsap.utils.toArray(
-//     '[attr-1="filter-radios"] .radio_label'
-//   );
-//   const filterInputs = gsap.utils.toArray('[attr-1="filter-radios"] input');
-//   const items = gsap.utils.toArray('[attr-1="filter-item"]');
+  const filterLabels = gsap.utils.toArray(
+    '[attr-1="filter-radios"] .radio_label'
+  );
+  const filterInputs = gsap.utils.toArray('[attr-1="filter-radios"] input');
+  const items = gsap.utils.toArray('[attr-1="filter-item"]');
 
-//   const nonAllInputs = filterInputs.filter(
-//     (input, index) => filterLabels[index]?.id !== "All"
-//   );
-//   const isRadio = nonAllInputs.length > 0 && nonAllInputs[0].type === "radio";
+  const nonAllInputs = filterInputs.filter(
+    (input, index) => filterLabels[index]?.id !== "All"
+  );
+  const isRadio = nonAllInputs.length > 0 && nonAllInputs[0].type === "radio";
 
-//   let allInput = null;
-//   filterInputs.forEach((input, index) => {
-//     if (filterLabels[index]?.id === "All") allInput = input;
-//   });
+  let allInput = null;
+  filterInputs.forEach((input, index) => {
+    if (filterLabels[index]?.id === "All") allInput = input;
+  });
 
-//   filterInputs.forEach((input, index) => {
-//     const label = filterLabels[index];
-//     if (!label) return;
+  filterInputs.forEach((input, index) => {
+    const label = filterLabels[index];
+    if (!label) return;
 
-//     if (label.id === "All") input.checked = true;
-//     else if (isRadio) input.checked = false;
-//     else input.checked = true;
-//   });
+    if (label.id === "All") input.checked = true;
+    else if (isRadio) input.checked = false;
+    else input.checked = true;
+  });
 
-//   if (isRadio && !allInput && filterInputs.length > 0) {
-//     filterInputs[0].checked = true;
-//   }
+  if (isRadio && !allInput && filterInputs.length > 0) {
+    filterInputs[0].checked = true;
+  }
 
-//   function setActiveText(labelEl, delay) {
-//     const allTexts = document.querySelectorAll(
-//       '[attr-1="filter-radios"] [flip-text]'
-//     );
-//     allTexts.forEach((t) => (t.style.color = ""));
+  function setActiveText(labelEl, delay) {
+    const allTexts = document.querySelectorAll(
+      '[attr-1="filter-radios"] [flip-text]'
+    );
+    allTexts.forEach((t) => (t.style.color = ""));
 
-//     const activeText = labelEl.querySelector("[flip-text]");
-//     if (!activeText) return;
+    const activeText = labelEl.querySelector("[flip-text]");
+    if (!activeText) return;
 
-//     gsap.killTweensOf(activeText);
+    gsap.killTweensOf(activeText);
 
-//     gsap.to(activeText, {
-//       color: "#fff",
-//       duration: 0.25,
-//       ease: "power2.out",
-//       delay: delay || 0,
-//     });
-//   }
+    gsap.to(activeText, {
+      color: "#fff",
+      duration: 0.25,
+      ease: "power2.out",
+      delay: delay || 0,
+    });
+  }
 
-//   function updateFilters() {
-//     const state = Flip.getState(items);
+  function updateFilters() {
+    const state = Flip.getState(items);
 
-//     let matches;
+    let matches;
 
-//     if (isRadio) {
-//       let selectedId = "All";
-//       let activeLabel = null;
+    if (isRadio) {
+      let selectedId = "All";
+      let activeLabel = null;
 
-//       filterInputs.forEach((input, index) => {
-//         if (input.checked) {
-//           selectedId = filterLabels[index]?.id || "All";
-//           activeLabel = filterLabels[index] || null;
-//         }
-//       });
+      filterInputs.forEach((input, index) => {
+        if (input.checked) {
+          selectedId = filterLabels[index]?.id || "All";
+          activeLabel = filterLabels[index] || null;
+        }
+      });
 
-//       if (activeLabel) setActiveText(activeLabel, 0.18);
+      if (activeLabel) setActiveText(activeLabel, 0.18);
 
-//       if (selectedId === "All") {
-//         matches = items;
-//       } else {
-//         matches = items.filter((item) => {
-//           const filterText = item.querySelector('[attr-1="filter"]');
-//           return filterText && filterText.textContent.trim() === selectedId;
-//         });
-//       }
-//     } else {
-//       const checkedIds = [];
+      if (selectedId === "All") {
+        matches = items;
+      } else {
+        matches = items.filter((item) => {
+          const filterText = item.querySelector('[attr-1="filter"]');
+          return filterText && filterText.textContent.trim() === selectedId;
+        });
+      }
+    } else {
+      const checkedIds = [];
 
-//       filterInputs.forEach((input, index) => {
-//         const labelId = filterLabels[index]?.id;
-//         if (input.checked && labelId && labelId !== "All")
-//           checkedIds.push(labelId);
-//       });
+      filterInputs.forEach((input, index) => {
+        const labelId = filterLabels[index]?.id;
+        if (input.checked && labelId && labelId !== "All")
+          checkedIds.push(labelId);
+      });
 
-//       const allNonAllChecked = nonAllInputs.every((input) => input.checked);
-//       if (allInput) allInput.checked = allNonAllChecked;
+      const allNonAllChecked = nonAllInputs.every((input) => input.checked);
+      if (allInput) allInput.checked = allNonAllChecked;
 
-//       if (checkedIds.length === 0) matches = [];
-//       else if (allNonAllChecked) matches = items;
-//       else {
-//         matches = items.filter((item) => {
-//           const filterText = item.querySelector('[attr-1="filter"]');
-//           return (
-//             filterText && checkedIds.includes(filterText.textContent.trim())
-//           );
-//         });
-//       }
-//     }
+      if (checkedIds.length === 0) matches = [];
+      else if (allNonAllChecked) matches = items;
+      else {
+        matches = items.filter((item) => {
+          const filterText = item.querySelector('[attr-1="filter"]');
+          return (
+            filterText && checkedIds.includes(filterText.textContent.trim())
+          );
+        });
+      }
+    }
 
-//     items.forEach((item) => {
-//       item.style.display = matches.indexOf(item) === -1 ? "none" : "block";
-//     });
+    items.forEach((item) => {
+      item.style.display = matches.indexOf(item) === -1 ? "none" : "block";
+    });
 
-//     Flip.from(state, {
-//       duration: 1,
-//       scale: true,
-//       absolute: false,
-//       ease: "power1.inOut",
-//       onEnter: (elements) => {
-//         gsap.set(elements, { transformOrigin: "50% 100%" });
-//         gsap.fromTo(
-//           elements,
-//           { opacity: 0, height: "0%" },
-//           {
-//             opacity: 1,
-//             height: "auto",
-//             duration: 1.2,
-//             stagger: { from: "center", amount: 0.1 },
-//             ease: "expo.out",
-//           }
-//         );
-//       },
-//       onLeave: (elements) => {
-//         gsap.to(elements, {
-//           opacity: 0,
-//           height: "0%",
-//           duration: 1.2,
-//           stagger: { from: "center", amount: 0.1 },
-//           ease: "expo.out",
-//         });
-//       },
-//     });
-//   }
+    Flip.from(state, {
+      duration: 1,
+      scale: true,
+      absolute: false,
+      ease: "power1.inOut",
+      onEnter: (elements) => {
+        gsap.set(elements, { transformOrigin: "50% 100%" });
+        gsap.fromTo(
+          elements,
+          { opacity: 0, height: "0%" },
+          {
+            opacity: 1,
+            height: "auto",
+            duration: 1.2,
+            stagger: { from: "center", amount: 0.1 },
+            ease: "expo.out",
+          }
+        );
+      },
+      onLeave: (elements) => {
+        gsap.to(elements, {
+          opacity: 0,
+          height: "0%",
+          duration: 1.2,
+          stagger: { from: "center", amount: 0.1 },
+          ease: "expo.out",
+        });
+      },
+    });
+  }
 
-//   function initFlipBg($wrap) {
-//     const $btns = $wrap.find("[flip-btn]");
-//     const $bg = $wrap.find("[flip-bg]").first();
-//     if (!$btns.length || !$bg.length) return null;
+  function initFlipBg($wrap) {
+    const $btns = $wrap.find("[flip-btn]");
+    const $bg = $wrap.find("[flip-bg]").first();
+    if (!$btns.length || !$bg.length) return null;
 
-//     function moveToLabel(labelEl, instant) {
-//       const wrapRect = $wrap.get(0).getBoundingClientRect();
-//       const btnRect = labelEl.getBoundingClientRect();
+    function moveToLabel(labelEl, instant) {
+      const wrapRect = $wrap.get(0).getBoundingClientRect();
+      const btnRect = labelEl.getBoundingClientRect();
 
-//       gsap.to($bg, {
-//         x: btnRect.left - wrapRect.left,
-//         y: btnRect.top - wrapRect.top,
-//         width: btnRect.width,
-//         height: btnRect.height,
-//         duration: instant ? 0 : 0.6,
-//         ease: "power3.out",
-//       });
-//     }
+      gsap.to($bg, {
+        x: btnRect.left - wrapRect.left,
+        y: btnRect.top - wrapRect.top,
+        width: btnRect.width,
+        height: btnRect.height,
+        duration: instant ? 0 : 0.6,
+        ease: "power3.out",
+      });
+    }
 
-//     const $checkedLabel = $btns.has("input[type='radio']:checked").first();
-//     const startLabel = ($checkedLabel.length ? $checkedLabel : $btns.eq(0)).get(
-//       0
-//     );
+    const $checkedLabel = $btns.has("input[type='radio']:checked").first();
+    const startLabel = ($checkedLabel.length ? $checkedLabel : $btns.eq(0)).get(
+      0
+    );
 
-//     gsap.set($bg, { x: 0, y: 0 });
-//     moveToLabel(startLabel, true);
-//     setActiveText(startLabel, 0);
+    gsap.set($bg, { x: 0, y: 0 });
+    moveToLabel(startLabel, true);
+    setActiveText(startLabel, 0);
 
-//     let resizeRaf = null;
-//     $(window)
-//       .off("resize.flipTabs")
-//       .on("resize.flipTabs", function () {
-//         if (resizeRaf) cancelAnimationFrame(resizeRaf);
-//         resizeRaf = requestAnimationFrame(() => {
-//           const active =
-//             $btns.has("input[type='radio']:checked").first().get(0) ||
-//             startLabel;
-//           moveToLabel(active, true);
-//           setActiveText(active, 0);
-//         });
-//       });
+    let resizeRaf = null;
+    $(window)
+      .off("resize.flipTabs")
+      .on("resize.flipTabs", function () {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+          const active =
+            $btns.has("input[type='radio']:checked").first().get(0) ||
+            startLabel;
+          moveToLabel(active, true);
+          setActiveText(active, 0);
+        });
+      });
 
-//     return moveToLabel;
-//   }
+    return moveToLabel;
+  }
 
-//   const $wrap = $("[flip-wrap]").first();
-//   const moveBgTo = $wrap.length ? initFlipBg($wrap) : null;
+  const $wrap = $("[flip-wrap]").first();
+  const moveBgTo = $wrap.length ? initFlipBg($wrap) : null;
 
-//   filterInputs.forEach((input, index) => {
-//     input.addEventListener("change", (e) => {
-//       if (!isRadio && filterLabels[index]?.id === "All") {
-//         const shouldCheck = e.target.checked;
-//         nonAllInputs.forEach((checkbox) => (checkbox.checked = shouldCheck));
-//       }
+  filterInputs.forEach((input, index) => {
+    input.addEventListener("change", (e) => {
+      if (!isRadio && filterLabels[index]?.id === "All") {
+        const shouldCheck = e.target.checked;
+        nonAllInputs.forEach((checkbox) => (checkbox.checked = shouldCheck));
+      }
 
-//       if (isRadio && input.checked && moveBgTo) {
-//         const label = filterLabels[index];
-//         if (label) {
-//           moveBgTo(label, false);
-//           setActiveText(label, 0.18);
-//         }
-//       }
+      if (isRadio && input.checked && moveBgTo) {
+        const label = filterLabels[index];
+        if (label) {
+          moveBgTo(label, false);
+          setActiveText(label, 0.18);
+        }
+      }
 
-//       updateFilters();
-//     });
-//   });
+      updateFilters();
+    });
+  });
 
-//   updateFilters();
-// }
+  updateFilters();
+}
 
-// flipFilterTabs();
+flipFilterTabs();
