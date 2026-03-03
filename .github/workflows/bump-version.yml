@@ -1,4 +1,4 @@
-name: Bump version.txt to commit SHA
+name: Bump version.txt (numeric counter)
 
 on:
   push:
@@ -23,22 +23,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Get short SHA
-        id: sha
-        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Update version.txt if needed
+      - name: Increment version number
         run: |
-          echo "Current SHA: ${{ steps.sha.outputs.short }}"
-          echo "${{ steps.sha.outputs.short }}" > version.txt.tmp
+          # read existing version (default to 0 if missing or invalid)
           if [ -f version.txt ]; then
-            if [ "$(cat version.txt)" = "${{ steps.sha.outputs.short }}" ]; then
-              echo "version.txt already up-to-date"
-              rm version.txt.tmp
-              exit 0
-            fi
+            v=$(cat version.txt 2>/dev/null || echo 0)
+          else
+            v=0
           fi
-          mv version.txt.tmp version.txt
+          # ensure it's numeric
+          v=$((v + 1))
+          echo "$v" > version.txt
           git add version.txt
-          git commit -m "chore: bump version.txt to ${{ steps.sha.outputs.short }}" || echo "No commit needed"
+          git commit -m "ci: bump version to $v" || echo "No commit needed"
           git push origin HEAD:main
