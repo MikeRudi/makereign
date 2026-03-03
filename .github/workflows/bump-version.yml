@@ -1,0 +1,44 @@
+name: Bump version.txt to commit SHA
+
+on:
+  push:
+    branches:
+      - main
+    # Ignore changes that are only to version.txt so the workflow won't loop
+    paths-ignore:
+      - 'version.txt'
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Get short SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Update version.txt if needed
+        run: |
+          echo "Current SHA: ${{ steps.sha.outputs.short }}"
+          echo "${{ steps.sha.outputs.short }}" > version.txt.tmp
+          if [ -f version.txt ]; then
+            if [ "$(cat version.txt)" = "${{ steps.sha.outputs.short }}" ]; then
+              echo "version.txt already up-to-date"
+              rm version.txt.tmp
+              exit 0
+            fi
+          fi
+          mv version.txt.tmp version.txt
+          git add version.txt
+          git commit -m "chore: bump version.txt to ${{ steps.sha.outputs.short }}" || echo "No commit needed"
+          git push origin HEAD:main
